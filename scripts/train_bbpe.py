@@ -13,7 +13,7 @@ from babyberta import configs
 
 VOCAB_SIZE = 4096 * 2
 MIN_FREQUENCY = 2
-CORPUS_NAMES = ['aochildes', 'aonewsela', 'wikipedia1', 'wikipedia2', 'wikipedia3']
+CORPUS_NAMES = ['aochildes', 'aonewsela', 'wikipedia1', 'wikipedia2', 'wikipedia3', 'data_age_0', 'data_age_1', 'data_age_2', 'data_age_3', 'data_age_4', 'data_age_5']
 ADD_PREFIX_SPACE = True
 
 model = BPE(unk_token=configs.Data.unk_symbol)

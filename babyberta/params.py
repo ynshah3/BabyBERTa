@@ -9,6 +9,12 @@ param2requests = {
         ('aochildes',),
         ('aonewsela',),
         ('wikipedia1',),
+        ('data_age_0',),
+        ('data_age_1',),
+        ('data_age_2',),
+        ('data_age_3',),
+        ('data_age_4',),
+        ('data_age_5',),
     ],
 
     # WARNING: if changing unmasking probability,
@@ -54,7 +60,7 @@ param2default = {
     'leave_unmasked_prob_start': 0.0,  # better performance if no unmasking
     'leave_unmasked_prob': 0.0,  # better performance if no unmasking
     'random_token_prob': 0.1,
-    'corpora': ('aochildes',),
+    'corpora': ('data_age_0',),
     'tokenizer': 'babyberta',  # larger than 8k slightly reduces performance
     'add_prefix_space': True,  # better if True, whether to treat first token like any other token (False in GPT-2)
     'max_input_length': 128,  # unacceptable performance if lower than ~32

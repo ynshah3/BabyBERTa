@@ -13,3 +13,14 @@
 /BabyBERTa-1/
 /BabyBERTa-2/
 /BabyBERTa-3/
+
+.ipynb_checkpoints/
+babyberta/babyberta/
+__pycache__
+0/
+1/
+2/
+3/
+4/
+5/
+model.safetensors

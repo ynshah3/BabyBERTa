@@ -4,7 +4,7 @@ from torch.nn import CrossEntropyLoss
 from typing import Tuple, List, Dict
 from itertools import islice
 
-from babyberta import configs
+import configs
 
 loss_fct = CrossEntropyLoss()
 
@@ -57,12 +57,13 @@ def forward_mlm(model,
                 x: Dict[str, torch.tensor],
                 y: torch.tensor,
                 ) -> torch.tensor:
-    output = model(**{k: v.to('cuda') for k, v in x.items()})
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    output = model(**{k: v.to(device) for k, v in x.items()})
     logits_3d = output['logits']
     logits_2d = logits_3d.view(-1, model.config.vocab_size)
     bool_1d = mask_matrix.view(-1)
     logits_for_masked_words = logits_2d[bool_1d]
-    labels = y.view(-1).cuda()
+    labels = y.view(-1).to(device)
     loss = loss_fct(logits_for_masked_words,  # [num masks in batch, vocab size]
                     labels)  # [num masks in batch]
 

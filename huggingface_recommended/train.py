@@ -9,10 +9,10 @@ from datasets import Dataset, DatasetDict
 from transformers.models.roberta import RobertaConfig, RobertaForMaskedLM, RobertaTokenizerFast
 from transformers import DataCollatorForLanguageModeling, Trainer, set_seed, TrainingArguments
 
-from babyberta.io import load_sentences_from_file
-from babyberta.utils import make_sequences
-from babyberta import configs
-from babyberta.params import param2default, Params
+from ios import load_sentences_from_file
+from utils import make_sequences
+import configs
+from params import param2default, Params
 
 
 def main():

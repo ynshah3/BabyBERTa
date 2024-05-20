@@ -8,9 +8,9 @@ from tokenizers import Tokenizer
 from transformers.models.roberta import RobertaForMaskedLM
 
 
-from babyberta.utils import make_sequences
-from babyberta.dataset import DataSet
-from babyberta.io import load_sentences_from_file, save_forced_choice_predictions
+from utils import make_sequences
+from dataset import DataSet
+from ios import load_sentences_from_file, save_forced_choice_predictions
 
 
 def do_probing(save_path: Path,
@@ -55,16 +55,17 @@ def calc_cross_entropies(model: RobertaForMaskedLM,
     model.eval()
     cross_entropies = []
     loss_fct = CrossEntropyLoss(reduction='none')
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     with torch.no_grad():
 
         for x, _, _ in dataset:
 
             # get loss
-            output = model(**{k: v.to('cuda') for k, v in x.items()})
+            output = model(**{k: v.to(device) for k, v in x.items()})
             logits_3d = output['logits']
             logits_for_all_words = logits_3d.permute(0, 2, 1)
-            labels = x['input_ids'].cuda()
+            labels = x['input_ids'].to(device)
             loss = loss_fct(logits_for_all_words,  # need to be [batch size, vocab size, seq length]
                             labels,  # need to be [batch size, seq length]
                             )

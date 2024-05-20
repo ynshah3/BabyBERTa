@@ -9,36 +9,33 @@ import transformers
 from transformers.models.roberta import RobertaForMaskedLM, RobertaConfig
 from transformers import AdamW, get_linear_schedule_with_warmup
 
-from babyberta import configs
-from babyberta.io import load_sentences_from_file, load_tokenizer
-from babyberta.params import Params
-from babyberta.utils import split, make_sequences, forward_mlm
-from babyberta.probing import do_probing
-from babyberta.dataset import DataSet
+import configs
+from ios import load_sentences_from_file, load_tokenizer
+from params import Params, param2default
+from utils import split, make_sequences, forward_mlm
+from probing import do_probing
+from dataset import DataSet
 
 
-def main(param2val):
-
-    assert transformers.__version__ == '4.3.3'
-    assert torch.__version__.startswith('1.6.0')
+if __name__ == '__main__':
 
     # params
-    params = Params.from_param2val(param2val)
+    params = Params.from_param2val(param2default)
     params.framework = 'huggingface'
     params.is_huggingface_recommended = False
     print(params, flush=True)
 
     #  path to root folder on shared drive where results are saved, and data is loaded
-    project_path = Path(param2val['project_path'])
+    project_path = Path('./')
 
     # probing path - contains probing sentences
-    probing_path = configs.Dirs.probing_sentences
+    probing_path = Path('./sentences')
     if not probing_path.exists():
         raise FileNotFoundError(f'Path to probing sentences does not exist: {probing_path}.'
                                 'Probing sentences can be downloaded from github.com/phueb/Zorro/sentences')
 
     # save_path - locations where probing results are saved
-    save_path = Path(param2val['save_path'])
+    save_path = Path('./0/')
     if not save_path.exists():
         save_path.mkdir(parents=True)
 
@@ -103,7 +100,8 @@ def main(param2val):
         model = RobertaForMaskedLM(config=config)
 
     print('Number of parameters: {:,}'.format(model.num_parameters()), flush=True)
-    model.cuda(0)
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    model.to(device)
 
     train_dataset = DataSet(train_sequences, tokenizer, params)
     devel_dataset = DataSet(devel_sequences, tokenizer, params)
@@ -152,7 +150,7 @@ def main(param2val):
             is_first_time_in_loop = False
 
             # eval
-            if step % configs.Eval.interval == 0:
+            if step == max_step - 1:
                 is_evaluated_at_current_step = True
 
                 # pp
@@ -209,4 +207,4 @@ def main(param2val):
 
     print('Reached end of babyberta.job.main', flush=True)
 
-    return performance_curves
+    print(performance_curves)
