@@ -18,7 +18,7 @@ class Dirs:
 
 class Data:
     min_sentence_length = 1
-    train_prob = 1.0  # probability that sentence is assigned to train split
+    train_prob = 0.8  # probability that sentence is assigned to train split
     mask_symbol = '<mask>'
     pad_symbol = '<pad>'
     unk_symbol = '<unk>'
