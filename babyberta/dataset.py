@@ -168,7 +168,7 @@ class DataSet:
         - pattern size is dynamically shortened if a tokenized sequence is smaller than mask_pattern_size.
         - num_mask_patterns is dynamically adjusted if number of possible patterns is smaller than num_mask_patterns.
         """
-        random.seed(None)  # use different patterns across different runs
+        random.seed(random.randint(0, 2000))  # use different patterns across different runs
 
         pattern_size = min(self.params.mask_pattern_size, num_tokens_after_truncation)
 

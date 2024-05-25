@@ -60,7 +60,7 @@ param2default = {
     'leave_unmasked_prob_start': 0.0,  # better performance if no unmasking
     'leave_unmasked_prob': 0.0,  # better performance if no unmasking
     'random_token_prob': 0.1,
-    'corpora': ('data_age_0',),
+    'corpora': ('data_age_1',),
     'tokenizer': 'babyberta',  # larger than 8k slightly reduces performance
     'add_prefix_space': True,  # better if True, whether to treat first token like any other token (False in GPT-2)
     'max_input_length': 128,  # unacceptable performance if lower than ~32
@@ -69,7 +69,7 @@ param2default = {
     'batch_size': 16,
     'lr': 1e-4,  # 1e-4 is used in fairseq (and performs better here), and 1e-3 is default in huggingface
     'num_epochs': 1,  # use 1 epoch to use dynamic masking
-    'num_warmup_steps': 24_000,  # 24K used in Roberta-base
+    'num_warmup_steps': 9000,  # 24K used in Roberta-base
     'weight_decay': 0.0,
 
     # model

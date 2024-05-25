@@ -19,6 +19,7 @@ from dataset import DataSet
 
 if __name__ == '__main__':
     for i in range(1):
+        print(f'run {i}\n------', flush=True)
         # params
         params = Params.from_param2val(param2default)
         params.framework = 'huggingface'
@@ -35,7 +36,7 @@ if __name__ == '__main__':
                                     'Probing sentences can be downloaded from github.com/phueb/Zorro/sentences')
 
         # save_path - locations where probing results are saved
-        save_path = Path(f'./0/run_{i}/')
+        save_path = Path(f'./1/run_{i}/')
         if not save_path.exists():
             save_path.mkdir(parents=True)
 
@@ -66,7 +67,7 @@ if __name__ == '__main__':
             raise AttributeError('Invalid arg to training_order.')
 
         all_sequences = make_sequences(sentences, params.num_sentences_per_input)
-        train_sequences, devel_sequences = split(all_sequences)
+        train_sequences, devel_sequences = split(all_sequences, seed=random.randint(0, 2000))
 
         # BabyBERTa
         print('Preparing BabyBERTa...')
@@ -88,16 +89,7 @@ if __name__ == '__main__':
                             initializer_range=params.initializer_range,
                             )
         # load weights from previous checkpoint
-        if params.load_from_checkpoint.startswith('param'):
-            path_tmp = Path('./') / 'runs' / params.load_from_checkpoint
-            model_files = list(path_tmp.rglob('**/saves/*.bin'))
-            print(f'Found {len(model_files)} saved models')
-            path_cpt = random.choice(model_files)
-            print(f'Trying to load model from {path_cpt.parent}')
-            model = RobertaForMaskedLM.from_pretrained(path_cpt.parent)
-        # initialize random weights
-        else:
-            model = RobertaForMaskedLM(config=config)
+        model = RobertaForMaskedLM.from_pretrained('0/run_1/')
 
         print('Number of parameters: {:,}'.format(model.num_parameters()), flush=True)
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -111,6 +103,8 @@ if __name__ == '__main__':
 
         # count number of steps in training data
         max_step = train_dataset.num_batches * params.num_epochs
+        print(f'batch size={train_dataset.params.batch_size}', flush=True)
+        print(f'num batches={train_dataset.num_batches}', flush=True)
         print(f'max step={max_step:,}', flush=True)
 
         # optimizer + lr schedule
@@ -129,6 +123,10 @@ if __name__ == '__main__':
         step = 0
         is_evaluated_at_current_step = False
         is_first_time_in_loop = True
+
+        # for paradigm_path in probing_path.rglob(f'*.txt'):
+        #     do_probing(save_path, paradigm_path, model, step,
+        #             params.include_punctuation, tokenizer=tokenizer)
 
         # train + eval loop
         for epoch_id in range(params.num_epochs):
