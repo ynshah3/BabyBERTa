@@ -12,7 +12,7 @@ def process_files_in_directory(directory_path):
             total_pairs = len(lines) #// 2
             count = 0
             
-            for i in range(0, len(lines)):
+            for i in range(0, len(lines), 2):
                 first_row_decimal = float(lines[i].strip().split()[-1])
                 # second_row_decimal = float(lines[i + 1].strip().split()[-1])
                 
@@ -41,7 +41,7 @@ def process_files_in_directory(directory_path):
 
 # Example usage:
 for i in range(1):
-    directory_path = f"1/run_{i}/babyberta"
+    directory_path = f"4/run_{i}/babyberta"
     filenames_str, fractions_str = process_files_in_directory(directory_path)
     if i == 0:
         print(filenames_str)
